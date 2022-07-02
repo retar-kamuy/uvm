@@ -33,14 +33,17 @@ begin
 	uvm_config_db#(virtual spi_if)::set(null,"*","spi_vif",spi_if1);
 end
 
+initial begin
+	@(posedge apb_if1.PRESETn);
+	forever #5 apb_if1.PCLK = ~apb_if1.PCLK;
+end
+
 initial
 begin
 	apb_if1.PCLK = 1'b0;
 	apb_if1.PRESETn = 1'b0;
 	#20 apb_if1.PRESETn = 1'b1;
-	#5 forever apb_if1.PCLK = ~apb_if1.PCLK;
-	#100 $finish;
+	#1000 $finish;
 end
-
 
 endmodule
