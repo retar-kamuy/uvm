@@ -23,10 +23,7 @@ TB : RTL
 SIM : TB
 	#${qverilog} -sv ${RTL_INC} ${APB_INC} ${SPI_INC} ${ENV_INC} ${ENV_SRC_INC} ${TESTS_INC} tb_top.sv -R -sv_lib ${QVH_HOME}/uvm_dpi -c -do "run -all; q" -l questa.log
 	#vsim -novopt ${RTL_INC} ${APB_INC} ${SPI_INC} ${ENV_INC} ${ENV_SRC_INC} ${TESTS_INC} tb_top -sv_lib ${QVH_HOME}/uvm_dpi -c -do "run -all; q" -l vsim.log
-	vsim ${RTL_INC} ${APB_INC} ${SPI_INC} ${ENV_INC} ${ENV_SRC_INC} ${TESTS_INC} tb_top -c -do "run -all; q" -l vsim.log
-
+	vsim ${RTL_INC} ${APB_INC} ${SPI_INC} ${ENV_INC} ${ENV_SRC_INC} ${TESTS_INC} tb_top -c -do "add wave -r /*; run -all; quit" -l vsim.log
 
 clean:
-	rm -rf work vlib.log vlog.log vsim.log
-	
-	
+	rm -rf work vlib.log vlog.log vsim.log vsim.wlf
