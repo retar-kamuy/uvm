@@ -1,5 +1,18 @@
 # uvm
 
+Questa FPGA Edhitionのライセンス認証方法
+
+[https://www.macnica.co.jp/business/semiconductor/articles/intel/139706/]
+
+ライセンス設定なしで使用できる最後のModelSim-ISEはQuartus Standardのダウンロードページ内"Individual Files"タブからダウンロードできる
+
+[https://www.intel.com/content/www/us/en/software-kit/661015/intel-quartus-prime-standard-edition-design-software-version-20-1-for-windows.html]
+
+Intel® FPGA Self-Service Licensing Center
+
+[https://licensing.intel.com/psg/s/?language=ja]
+
+
 ```
 sudo dnf -y install libXext.i686
 sudo dnf -y install libgcc.i686
