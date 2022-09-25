@@ -9,22 +9,24 @@ def _compile_dpi_lib_impl(ctx):
 
     args = ctx.actions.args()
     #args.add_joined("-I", headers, join_with=",")
+    args.add('-timescale "1ns/1ns"')
     args.add_joined(in_files, join_with=" ")
-    args.add("-o", out_file)
-    args.add("-m64")
+    #args.add("-o", out_file)
+    args.add('-m64')
 
     ctx.actions.run(
         outputs = [out_file],
         inputs = ctx.files.srcs,
         arguments = [args],
-        executable = "gcc"
+        #env = {"DPI_SRC":"/opt/intelFPGA/22.2/questa_fse/verilog_src/uvm-1.2/src/dpi/uvm_dpi.cc"},
+        executable = 'vlog'
     )
     return[DefaultInfo(files = depset([out_file]))]
 
 compile_dpi_lib = rule(
     implementation = _compile_dpi_lib_impl,
     attrs = {
-        "srcs": attr.label_list(allow_files = [".c"]),
+        "srcs": attr.label_list(allow_files = True),
         #"hdrs": attr.label_list(allow_files = [".h"])
     }
 )

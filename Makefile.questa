@@ -28,15 +28,14 @@ endif
 # Define Variables
 #---------------------------------------------------------------
 
-#UVM_HOME ?= ..
-UVM_HOME = /opt/intelFPGA/20.1/modelsim_ase/verilog_src/uvm-1.2
+UVM_HOME = /opt/intelFPGA/22.2/questa_fse/verilog_src/uvm-1.2
 
-LIBDIR  = $(UVM_HOME)/lib
-MTI_HOME = /opt/intelFPGA/20.1/modelsim_ase
-GCC     = $(MTI_HOME)/gcc-7.4.0-linux_x86_64/bin/g++
-#GCC     = gcc
+#LIBDIR  = $(UVM_HOME)/lib
+LIBDIR  = ./lib
+#GCC     = $(MTI_HOME)/gcc-7.4.0-linux_x86_64/bin/g++
+GCC     = gcc
 TEST    = /usr/bin/test
-BITS    ?= 32
+BITS    = 64
 LIBNAME = uvm_dpi
 DPI_SRC = $(UVM_HOME)/src/dpi/uvm_dpi.cc
 
@@ -54,33 +53,32 @@ GCCCMD =  $(GCC) \
         -o $(LIBDIR)/$(LIBNAME).so
 
 GCC_WINCMD = \
-        $(WIN_GCC) \
-        -g \
-        -DQUESTA \
-        -W \
-        -shared \
-        -Bsymbolic \
-        -x c \
-        -I$(MTI_HOME)/include \
-        $(DPI_SRC) \
-        -o $(LIBDIR)/$(LIBNAME).dll \
-		$(MTI_HOME)/win32/mtipli.dll -lregex
+	$(WIN_GCC) \
+	-g \
+	-DQUESTA \
+	-W \
+	-shared \
+	-Bsymbolic \
+	-x c \
+	-I$(MTI_HOME)/include \
+	$(DPI_SRC) \
+	-o $(LIBDIR)/$(LIBNAME).dll \
+	$(MTI_HOME)/win32/mtipli.dll -lregex
 
 WIN_GCC = $(MTI_HOME)/gcc-4.2.1-mingw32vc9/bin/g++.exe
 
 VLIB =  vlib work
 
 VLOG =  vlog \
-        -timescale "1ns/1ns" \
-        $(DPILIB_VLOG_OPT) \
-        $(VLOG_OPT) \
-        $(OPT_C) \
-        -mfcu \
-        -suppress 2181 \
-        +acc=rmb \
-        -writetoplevels questa.tops \
-        +incdir+$(UVM_HOME)/src \
-        $(UVM_HOME)/src/uvm.sv
+	-timescale "1ns/1ns" \
+	$(DPILIB_VLOG_OPT) \
+	$(VLOG_OPT) \
+	$(OPT_C) \
+	-mfcu \
+	-suppress 2181 \
+	-writetoplevels questa.tops \
+	+incdir+$(UVM_HOME)/src \
+	$(UVM_HOME)/src/uvm.sv
 
 
 VSIM =  vsim \
@@ -174,6 +172,9 @@ dpi_lib64:
 
 vlib: $(DPILIB_TARGET)
 	vlib work
+
+vlog:
+	$(VLOG)
 
 clean:
 	rm -rf *~ work vsim.wlf* *.log questa.tops transcript *.vstf

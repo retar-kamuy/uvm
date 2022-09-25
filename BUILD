@@ -1,17 +1,22 @@
-load(":foo.bzl", "compile_dpi_lib")
+load(":rtl_sim.bzl", "vlog")
 
-#compile_dpi_lib(
-#    name = "dpi_lib",
-#    #hdrs = glob(["C:\\intelFPGA\\20.1\\modelsim_ase\\include\\*.h"]),
-#    srcs = ["swap.c"],
-#)
+vlog(
+    name = "vlog_dut",
+    libname = "lib_dut",
+    srcs = ["src/half_adder.sv"],
+    vlogopt = [
+        "-mfcu",
+        "-suppress 2181",
+    ],
+)
 
-cc_library(
-    name = "dpi_lib",
-    srcs = ["src/dpi/uvm_dpi.cc"],
-    hdrs = glob(["src/dpi/*"] + ["include/*.h"]),
-    includes = ["/opt/intelFPGA/20.1/modelsim_ase/include",
-                "src/dpi"],
-    visibility = ["//visibility:public"],
-    copts = ["-m64", "-fPIC", "-DQUESTA", "-g", "-W", "-shared", "-x c"]
+vlog(
+    name = "vlog_tb",
+    libname = "lib_tb",
+    srcs = ["tb/half_adder_tb.sv"],
+    vlogopt = [
+        "-timescale 1ns/1ns",
+        "-mfcu",
+        "-suppress 2181",
+    ],
 )
