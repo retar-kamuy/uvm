@@ -86,7 +86,9 @@ VSIM =  vsim \
         $(VSIM_OPT) \
         $(OPT_R) \
         -c \
-        -do "run -all; q" \
+        #-voptargs="+acc" \
+        -do "add wave -r /*; run -all; quit" \
+        -wlf vsim.wlf \
         -l questa.log \
         -f questa.tops
 

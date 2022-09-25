@@ -1,4 +1,16 @@
-load(":rtl_sim.bzl", "vlog")
+load(":rtl_sim.bzl", "vlib", "vmap", "vlog")
+
+vlib(
+    name = "vlib_dut",
+    library_name = "work",
+)
+
+vmap(
+    name = "vmap_dut",
+    library_name = "work",
+    library_path = ":vlib_dut",
+    ini_filepath = "modelsim.ini"
+)
 
 vlog(
     name = "vlog_dut",

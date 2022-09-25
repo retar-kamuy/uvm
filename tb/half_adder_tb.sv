@@ -29,5 +29,7 @@ module half_adder_tb;
         a = 1;
         b = 1;
         #period;
+
+        $finish;
     end
 endmodule
