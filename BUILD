@@ -1,34 +1,20 @@
-load(":rtl_sim.bzl", "vlib", "vmap", "vlog")
-
-vlib(
-    name = "vlib_dut",
-    library_name = "work",
-)
-
-vmap(
-    name = "vmap_dut",
-    library_name = "work",
-    library_path = ":vlib_dut",
-    ini_filepath = "modelsim.ini"
-)
+load(":rtl_sim.bzl", "vlog")
 
 vlog(
     name = "vlog_dut",
-    libname = "lib_dut",
+    library_name = "lib",
     srcs = ["src/half_adder.sv"],
-    vlogopt = [
-        "-mfcu",
-        "-suppress 2181",
-    ],
+    log_name = "vlog_dut.log",
 )
 
 vlog(
     name = "vlog_tb",
-    libname = "lib_tb",
+    library_name = "lib_tb",
     srcs = ["tb/half_adder_tb.sv"],
-    vlogopt = [
+    opts = [
         "-timescale 1ns/1ns",
         "-mfcu",
         "-suppress 2181",
     ],
+    log_name = "vlog_tb.log",
 )
