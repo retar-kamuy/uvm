@@ -1,0 +1,1 @@
+build --action_env=MGLS_LICENSE_FILE
