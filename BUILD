@@ -1,8 +1,8 @@
-load(":rtl_sim.bzl", "vlog")
+load(":rtl_sim.bzl", "vlog", "vsim")
 
 vlog(
     name = "vlog_dut",
-    library_name = "lib",
+    library_name = "lib_dut",
     srcs = ["src/half_adder.sv"],
     log_name = "vlog_dut.log",
 )
@@ -17,4 +17,10 @@ vlog(
         "-suppress 2181",
     ],
     log_name = "vlog_tb.log",
+)
+
+vsim(
+    name = "vsim",
+    libs = [":vlog_dut", ":vlog_tb"],
+    log_name = "vsim.log",
 )

@@ -1,4 +1,4 @@
-load("@uvm//:questa.bzl", "uvm_compile")
+#load("@uvm//:questa.bzl", "uvm_compile")
 
 cc_library(
     name = "dpi_lib",
@@ -10,9 +10,9 @@ cc_library(
     copts = ["-m64", "-fPIC", "-DQUESTA", "-g", "-W", "-shared", "-x c"],
 )
 
-uvm_compile(
-    name = "vlog_uvm",
-    srcs = ["verilog_src/uvm-1.2/src/uvm.sv"],
-    hdrs = glob(["verilog_src/uvm-1.2/src/*.sv"] + ["verilog_src/uvm-1.2/src/*.svh"]),
-    visibility = ["//visibility:public"],
-)
+#uvm_compile(
+#    name = "vlog_uvm",
+#    srcs = ["verilog_src/uvm-1.2/src/uvm.sv"],
+#    hdrs = glob(["verilog_src/uvm-1.2/src/*.sv"] + ["verilog_src/uvm-1.2/src/*.svh"]),
+#    visibility = ["//visibility:public"],
+#)
