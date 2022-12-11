@@ -1,4 +1,4 @@
-load(":rtl_sim.bzl", "vlog", "vsim")
+load(":rtl_sim.bzl", "vlog", "vmap", "vsim")
 
 vlog(
     name = "vlog_dut",
@@ -19,8 +19,14 @@ vlog(
     log_name = "vlog_tb.log",
 )
 
+vmap(
+    name = "vmap",
+    libs = [":vlog_dut", ":vlog_tb"],
+)
+
 vsim(
     name = "vsim",
     libs = [":vlog_dut", ":vlog_tb"],
     log_name = "vsim.log",
+    #inifile = "modelsim.ini",
 )

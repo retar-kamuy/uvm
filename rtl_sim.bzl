@@ -19,26 +19,6 @@ def _vlog_impl(ctx):
 
     return[DefaultInfo(files = depset([ctx.outputs.library_name]), runfiles = runfiles)]
 
-def _vsim_impl(ctx):
-    print(ctx.files.libs)
-    print("".join([file.path for file in ctx.files.libs]))
-
-    args = ctx.actions.args()
-    args.add("-c")
-    args.add_joined("-L", [file.basename for file in ctx.files.libs], join_with=" ")
-    args.add_all(["-wlf", "wave.wlf"])
-    args.add_all(["-do", "add wave -r /*; run -all; quit;"])
-    args.add_all(["-l", ctx.outputs.log_name])
-    args.add("bazel-out/k8-fastbuild/bin/lib_tb.half_adder_tb")
-
-    ctx.actions.run(
-        inputs = ctx.files.libs,
-        outputs = [ctx.outputs.log_name],
-        arguments = [args],
-        use_default_shell_env=True,
-        executable = "vsim",
-    )
-
 vlog = rule(
     implementation = _vlog_impl,
     attrs = {
@@ -49,8 +29,56 @@ vlog = rule(
         ),
         "opts": attr.string_list(),
         "log_name": attr.output(),
-    }
+    },
 )
+
+def _vmap_impl(ctx):
+    for lib in ctx.files.libs:
+        ctx.actions.run_shell(
+            inputs = [lib],
+            outputs = [ctx.outputs.ini_filepath],
+            arguments = [
+                #ctx.files.libs[0].basename,
+                lib.basename,
+                lib.path,
+                ctx.outputs.ini_filepath.path,
+            ],
+            use_default_shell_env=True,
+            command = "vmap $1 $2 >  && cat modelsim.ini > $3",
+        )
+
+    return[DefaultInfo(files = depset([ctx.outputs.ini_filepath]))]
+
+vmap = rule(
+    implementation = _vmap_impl,
+    attrs = {
+        "libs": attr.label_list(
+            providers = [DefaultInfo],
+            allow_files = True,
+            mandatory = True,
+        ),
+    },
+    outputs = {"ini_filepath": "modelsim.ini"}
+)
+
+def _vsim_impl(ctx):
+    args = ctx.actions.args()
+    args.add("-c")
+    args.add_joined("-L", [file.path for file in ctx.files.libs], join_with=" ")
+    #args.add_all(["-L %s" % file.basename for file in ctx.files.libs])
+    #args.add("-lib", "work")
+    args.add_all(["-wlf", "wave.wlf"])
+    args.add_all(["-do", "add wave -r /*; run -all; quit;"])
+    args.add_all(["-l", ctx.outputs.log_name])
+    args.add("bazel-out/k8-fastbuild/bin/work.half_adder_tb")
+
+    ctx.actions.run_shell(
+        inputs = ctx.files.libs,
+        outputs = [ctx.outputs.log_name],
+        #arguments = [args],
+        use_default_shell_env=True,
+        command = "ls -l",
+    )
 
 vsim = rule(
     implementation = _vsim_impl,
@@ -61,5 +89,6 @@ vsim = rule(
             mandatory = True,
         ),
         "log_name": attr.output(),
-    }
+        #"inifile": attr.output(),
+    },
 )
